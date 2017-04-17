@@ -355,3 +355,188 @@ longest = []
 }
 p longest[0]
 
+#Number 15
+#From 40(n) choose 20(r) (Can only move right and down)
+#http://www.mathwords.com/c/combination_formula.htm
+#formula is n!/(r-n)! * r!
+#override integer to add a factorial method and a choose method. It can be used by : Integer.choose(Integer)
+class Integer
+  def fact
+    (1..self).reduce(:*) || 1
+  end
+  def choose(r)
+    return self.fact / ((self-r).fact * r.fact)
+  end
+end
+
+puts 40.choose(20)
+
+#Number 16
+(2**1000).to_s.split('').inject(0){|sum,x| sum+=x.to_i}
+
+#Number 17
+#Very raw, but works
+def number_2_words(n)
+  w2n = {
+    90 => "ninety",
+    80 => "eighty",
+    70 => "seventy",
+    60 => "sixty",
+    50 => "fifty",
+    40 => "forty",
+    30 => "thirty",
+    20 => "twenty",
+    19=>"nineteen",
+    18=>"eighteen",
+    17=>"seventeen", 
+    16=>"sixteen",
+    15=>"fifteen",
+    14=>"fourteen",
+    13=>"thirteen",              
+    12=>"twelve",
+    11 => "eleven",
+    10 => "ten",
+    9 => "nine",
+    8 => "eight",
+    7 => "seven",
+    6 => "six",
+    5 => "five",
+    4 => "four",
+    3 => "three",
+    2 => "two",
+    1 => "one",
+    0 =>''
+  }
+  return w2n[n.to_i] if n.to_i < 20
+  return w2n[(n[0]+'0').to_i] + w2n[n[-1].to_i] if n.to_i<100
+  return w2n[n[0].to_i] + 'hundred' + (n[1..-1].to_i > 0 ? "and" : "") + number_2_words(n[1..-1]) if n.to_i<1000
+  return 'onethousand'
+end
+
+count=0
+(1..1000).each{|n| count += number_2_words(n.to_s).length}
+puts count
+
+#NUMBER 18
+
+=begin
+After a bit of research, I concluded that the best way to attack this problem would be to use a 'bottom-up' approach. It's used in dynamic programming. The idea is to : 
+ 1- flip the pyramid upside down
+ 2- starting with the second row (index 1) calculate which of the children added with the parent have the highest sum. 
+ 3- Then replace the parent with the added value
+ 4- iterate until the top (now bottom)
+ 5- If done correctly, the result will be at the bottom of the pyramid (index -1)
+ 
+ does the job with 120 iteration only (Instead of 1,307,674,368,000 with bruteforce)
+ =end
+count = 0 
+nums = "75
+95 64
+17 47 82
+18 35 87 10
+20 04 82 47 65
+19 01 23 75 03 34
+88 02 77 73 07 63 67
+99 65 04 28 06 16 70 92
+41 41 26 56 83 40 80 70 33
+41 48 72 33 47 32 37 16 94 29
+53 71 44 65 25 43 91 52 97 51 14
+70 11 33 28 77 73 17 78 39 68 17 57
+91 71 52 38 17 14 91 43 58 50 27 29 48
+63 66 04 68 89 53 67 30 73 16 69 87 40 31
+04 62 98 27 23 09 70 98 73 93 38 53 60 04 23".split("\n")
+nums.reverse.each_with_index{|n,i| nums[i] = n.split(" ").map(&:to_i)}
+nums.each_with_index{|row, row_index|
+p row
+  row.each_with_index{|num, num_index|
+    number1 = nums[row_index-1][num_index] + num if row_index > 0#item from 1 column below and same index
+    number2 = nums[row_index-1][num_index+1] + num if row_index > 0#item from 1 column below and +1 index
+    row[num_index] = (number1 > number2 ? number1 : number2) if row_index > 0
+  }
+}
+
+#Number 19
+require 'date'
+
+puts (Date.new(1900,01,01) .. Date.new(2000,12,31)).find_all {|n| n.strftime('%A %d') == 'Sunday 01'  }.count
+
+#Number 20
+
+p (1..100).inject(:*).to_s.split('').map(&:to_i).inject(:+)
+
+
+
+#Number 21
+
+def factors(num)
+  factors=[]
+  for i in 1 ... num
+    if num % i == 0
+      if (factors.include? num / i)
+        break
+      end
+      factors << i
+      factors << num / i if i !=1
+    end
+  end
+  return factors.inject(:+).to_i
+end
+x = (0...10000).find_all{|a|
+  b = factors(a)
+  a == factors(b) && b != a
+}.inject(:+)
+
+
+#Number 22
+
+names = ["AARON",...,"ZULMA"]
+
+p names.sort.collect!{|name,index| name = name.split('').map{|x| x.ord.to_i - 64}.inject(:+)}.each_with_index.map { |num,index| num*(index+1)}.inject(:+)
+
+
+
+#Number 23
+
+def factors(num)
+  factors=[]
+  for i in 1 .. num
+    if num % i == 0
+      if factors.include? num / i
+        break
+      end
+      factors << i
+      factors << num / i if i !=1 && (num / i) != Math.sqrt(num)
+    end
+  end
+  return factors
+end
+
+num = (0..28123).find_all{|x|
+  factors(x).inject(:+).to_i > x
+}
+
+sum_of_abun = []
+
+num.each do |x|
+  num. each do |y|
+    sum_of_abun << x + y unless x + y > 28123
+  end
+end
+sum_of_abun.uniq!
+p (0..28123).reject{|x| sum_of_abun.include? x}.inject(:+)
+
+
+#Number 24
+
+puts (0..9).to_a.permutation(10).to_a[999999].join
+
+
+
+#Number 25
+
+arr = [1,2]
+while true
+  break if arr[-1].to_s.length == 1000 
+  arr << arr[-2] + arr[-1]
+end
+puts arr.size
