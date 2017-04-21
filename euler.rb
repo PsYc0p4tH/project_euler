@@ -428,7 +428,7 @@ After a bit of research, I concluded that the best way to attack this problem wo
  5- If done correctly, the result will be at the bottom of the pyramid (index -1)
  
  does the job with 120 iteration only (Instead of 1,307,674,368,000 with bruteforce)
- =end
+=end
 count = 0 
 nums = "75
 95 64
